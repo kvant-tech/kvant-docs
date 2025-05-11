@@ -135,4 +135,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Ignore Obsidian configuration files in content directory
 content/.obsidian
