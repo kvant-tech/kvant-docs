@@ -1,4 +1,6 @@
-const en = {
+import type { Dictionary } from './i18n-config';
+
+export default {
   dark: 'Dark',
   light: 'Light',
   system: 'System',
@@ -26,6 +28,4 @@ const en = {
   searchPlaceholder: 'Search documentation...',
   // TOC related terms
   tocTitle: 'On This Page',
-};
-
-export default en;
+} satisfies Dictionary;
