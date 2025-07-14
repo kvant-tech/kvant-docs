@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+
+    <link rel="apple-touch-icon" href="https://cdn.rsuquant.com/assets/images/favicon/apple-touch-icon.png">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.rsuquant.com/assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.rsuquant.com/assets/images/favicon/favicon-16x16.png">
+
+    <link rel="manifest" href="https://cdn.rsuquant.com/assets/images/favicon/site.webmanifest">
+
+    <link rel="shortcut icon" href="https://cdn.rsuquant.com/assets/images/favicon/favicon.ico">
+
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- App styles -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.rsuquant.com/css/vendors.min.css?id=9b155c6e293890b87eb9">
+    <link rel="stylesheet" type="text/css" href="https://cdn.rsuquant.com/css/theme.min.css?id=454d34227717c63c8bae">
+    <link rel="stylesheet" type="text/css" href="https://cdn.rsuquant.com/css/app.min.css?id=9ed36495d49b3e1b7b49">
+
+</head>
+<body data-ma-theme="blue" class="">
+<div id="app"></div>
+<!-- App functions and actions -->
+<script src="https://cdn.rsuquant.com/js/vendor.min.js?id=c6afa0de8b571b088b9c"></script>
+<script src="https://cdn.rsuquant.com/js/theme.min.js?id=caa7a4b0576111ec93a4"></script>
+<script src="https://cdn.rsuquant.com/js/app.min.js?id=dcac5eee8a9ef3b5f9cf"></script>
+</body>
+</html>
