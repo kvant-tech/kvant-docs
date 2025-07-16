@@ -1,4 +1,4 @@
-import nextra from "nextra";
+import nextra from 'nextra';
 
 const withNextra = nextra({
   defaultShowCopyCode: true,
@@ -8,7 +8,8 @@ const withNextra = nextra({
 export default withNextra({
   reactStrictMode: true,
   i18n: {
-    locales: ["en", "ru"],
-    defaultLocale: "en",
+    locales: ['en', 'ru'],
+    defaultLocale: 'en',
   },
+  allowedDevOrigins: ['100.77.91.185'],
 });
