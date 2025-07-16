@@ -5,4 +5,7 @@ export default {
   ofs: {
     title: 'Функциональная схема',
   },
+  Policies: {
+    title: 'Регламенты',
+  },
 } satisfies MetaRecord;

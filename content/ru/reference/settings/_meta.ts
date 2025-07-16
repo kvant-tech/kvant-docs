@@ -1,7 +1,5 @@
 import type { MetaRecord } from 'nextra';
 
 export default {
-  'work-schedule': {
-    title: 'График работы',
-  },
+  index: 'График работы',
 } satisfies MetaRecord;
