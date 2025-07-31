@@ -1,6 +1,15 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Optional: import Nextra theme styles */
-@import "nextra-theme-docs/style.css"; /* or nextra-theme-blog/style.css */
+@import 'nextra-theme-docs/style.css'; /* or nextra-theme-blog/style.css */
 
 @variant dark (&:where(.dark *));
+
+/* Custom styles for MDX images */
+img {
+  max-width: 600px !important;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  display: block !important;
+}
