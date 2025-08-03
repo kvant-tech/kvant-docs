@@ -16,4 +16,7 @@ export default {
   'shift-work-setup': {
     title: 'Посменный график работы',
   },
+  timesheet: {
+    title: 'Табель рабочего времени',
+  },
 } satisfies MetaRecord;
