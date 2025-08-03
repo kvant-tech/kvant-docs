@@ -2,7 +2,7 @@ import type { MetaRecord } from 'nextra';
 
 export default {
   'What-is-Kvant-App': {
-    title: 'Что такое Kvant App?',
+    title: 'Что такое Приложение Квант?',
   },
   'first-steps': {
     title: 'Первые шаги',
