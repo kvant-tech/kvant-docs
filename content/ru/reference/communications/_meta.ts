@@ -7,6 +7,9 @@ export default {
   'create-communication': {
     title: 'Создание коммуникации',
   },
+  meeting: {
+    title: 'Встреча',
+  },
   notification_settings: {
     title: 'Настройки уведомлений',
   },

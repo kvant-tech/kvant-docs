@@ -14,4 +14,7 @@ export default {
   'function-permissions': {
     title: 'Разрешения на функцию',
   },
+  'work-schedules': {
+    title: 'Графики работы',
+  },
 } satisfies MetaRecord;
