@@ -1,6 +1,7 @@
 import type { MetaRecord } from 'nextra';
 
 export default {
+  index: 'Первые шаги',
   'ofs-construction': {
     title: 'Построение ОФС и организация работы функций',
   },
@@ -13,5 +14,4 @@ export default {
   'function-permissions': {
     title: 'Разрешения на функцию',
   },
-  index: '',
 } satisfies MetaRecord;

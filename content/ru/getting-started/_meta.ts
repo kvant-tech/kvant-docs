@@ -7,7 +7,9 @@ export default {
   'first-steps': {
     title: 'Первые шаги',
   },
-
+  'ai-assistant': {
+    title: 'ИИ - ассистент',
+  },
   'communication-rules': {
     title: 'Правила коммуникаций',
   },
