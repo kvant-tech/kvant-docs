@@ -1,29 +1,30 @@
-import type { MetaRecord } from "nextra";
+import type { MetaRecord } from 'nextra';
 
 export default {
   index: {
-    type: "page",
-    display: "hidden",
+    type: 'page',
+    display: 'hidden',
     theme: {
-      typesetting: "article",
+      typesetting: 'article',
       toc: false,
     },
   },
-  "getting-started": {
-    type: "page",
-    title: "Начало работы",
+  'getting-started': {
+    type: 'page',
+    title: 'Начало работы',
   },
   methodology: {
-    type: "page",
-    title: "Методология",
+    type: 'page',
+    title: 'Методология',
   },
   reference: {
-    type: "page",
-    title: "Справочник",
+    type: 'page',
+    title: 'Справочник',
   },
+
   nextra_link: {
-    type: "page",
-    title: "API Документация",
-    href: "https://docs.kvant.app/documentation/openapi",
+    type: 'page',
+    title: 'API Документация',
+    href: 'https://docs.kvant.app/documentation/openapi',
   },
 } satisfies MetaRecord;
