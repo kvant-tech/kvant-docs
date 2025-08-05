@@ -53,7 +53,7 @@ export default async function RootLayout({ children, params }) {
               ☝️ Документация находится в разработке
             </Banner>
           }
-          docsRepositoryBase="https://github.com/kvant-tech/kvant-docs"
+          docsRepositoryBase="https://github.com/kvant-tech/kvant-docs/blob/main"
           i18n={i18n.languages}
           sidebar={{
             defaultMenuCollapseLevel: 1,
