@@ -3,6 +3,7 @@ import nextra from 'nextra';
 const withNextra = nextra({
   defaultShowCopyCode: true,
   latex: true,
+  search: false,
 });
 
 export default withNextra({
