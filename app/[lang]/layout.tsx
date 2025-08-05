@@ -9,7 +9,7 @@ import type { Metadata } from 'next';
 
 import '../globals.css';
 
-import { Banner, Head, Search } from 'nextra/components';
+import { Banner, Head } from 'nextra/components';
 
 export const metadata: Metadata = {
   description: 'Kvant Docs is a documentation for Kvant App',
@@ -61,14 +61,6 @@ export default async function RootLayout({ children, params }) {
           }}
           editLink={dictionary.editPage}
           pageMap={pageMap}
-          search={
-            <Search
-              emptyResult={dictionary.searchEmptyResult}
-              errorText={dictionary.searchError}
-              loading={dictionary.searchLoading}
-              placeholder={dictionary.searchPlaceholder}
-            />
-          }
           lastUpdated={<LastUpdated>{dictionary.lastUpdated}</LastUpdated>}
           themeSwitch={{
             dark: dictionary.dark,
@@ -81,6 +73,7 @@ export default async function RootLayout({ children, params }) {
           }}
           feedback={{ content: null }}
           footer={<Footer />}
+          search={false}
         >
           {children}
         </Layout>
