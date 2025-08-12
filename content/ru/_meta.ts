@@ -21,10 +21,18 @@ export default {
     type: 'page',
     title: 'Справочник',
   },
-
-  nextra_link: {
+  'api-documentation': {
     type: 'page',
     title: 'API Документация',
     href: 'https://docs.kvant.app/documentation/openapi',
+  },
+  'for-shareholders': {
+    type: 'page',
+    title: 'Акционерам',
+    display: 'hidden',
+    theme: {
+      typesetting: 'article',
+      timestamp: false,
+    },
   },
 } satisfies MetaRecord;
