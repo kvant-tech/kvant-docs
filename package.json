@@ -39,5 +39,12 @@
   "browserslist": [
     ">= .25%",
     "not dead"
-  ]
+  ],
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@tailwindcss/oxide",
+      "sharp",
+      "unrs-resolver"
+    ]
+  }
 }
