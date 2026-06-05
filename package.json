@@ -33,13 +33,6 @@
     "eslint-config-next": "15.3.2",
     "prettier": "^3.5.3"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@tailwindcss/oxide",
-      "sharp",
-      "unrs-resolver"
-    ]
-  },
   "engines": {
     "node": ">=22.0.0"
   },
