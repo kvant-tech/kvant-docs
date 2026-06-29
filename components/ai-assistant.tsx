@@ -8,6 +8,13 @@ interface Message {
   content: string;
 }
 
+function sanitizeUrl(url: string): string {
+  const trimmed = url.trim();
+  if (trimmed.startsWith('/')) return trimmed;
+  if (trimmed.startsWith('https://')) return trimmed;
+  return '#';
+}
+
 function renderMarkdown(text: string) {
   const html = text
     .replace(/&/g, '&amp;')
@@ -18,7 +25,8 @@ function renderMarkdown(text: string) {
     .replace(/`(.+?)`/g, '<code class="ai-code">$1</code>')
     .replace(
       /\[([^\]]+)\]\(([^)]+)\)/g,
-      '<a href="$2" class="ai-link">$1</a>',
+      (_, label, url) =>
+        `<a href="${sanitizeUrl(url)}" class="ai-link">${label}</a>`,
     )
     .replace(/^\s*[-•]\s+(.+)$/gm, '<li>$1</li>')
     .replace(/(<li>.*<\/li>\n?)+/g, (m) => `<ul>${m}</ul>`)

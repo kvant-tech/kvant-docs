@@ -82,10 +82,35 @@ function buildContext(chunks: Chunk[]): string {
     .join('\n\n');
 }
 
+// --- rate limit (in-memory, per IP) ---
+
+const rateMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 20;       // requests
+const RATE_WINDOW = 60_000;  // per 1 minute
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
+    return false;
+  }
+  entry.count++;
+  return entry.count > RATE_LIMIT;
+}
+
 // --- handler ---
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { error: 'Слишком много запросов, попробуйте через минуту' },
+        { status: 429 },
+      );
+    }
+
     const { message, history } = await req.json();
 
     if (!message || typeof message !== 'string') {
