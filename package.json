@@ -10,11 +10,13 @@
     "lint": "next lint",
     "clean": "rm -rf .next",
     "types:check": "tsc --noEmit",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx}\""
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx}\"",
+    "index": "node scripts/index-docs.mjs"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.6",
     "clsx": "^2.1.1",
+    "openai": "^4.73.0",
     "lucide-react": "^0.509.0",
     "next": "^15.3.2",
     "nextra": "^4.2.17",

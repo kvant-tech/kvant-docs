@@ -4,6 +4,7 @@ import { getPageMap } from 'nextra/page-map';
 import { getDictionary, getDirection } from '../_dictionaries/get-dictionary';
 import { i18n } from '../_dictionaries/i18n-config';
 import { KvantLogo } from 'components/kvant-logo';
+import { AiAssistant } from 'components/ai-assistant';
 
 import type { Metadata } from 'next';
 
@@ -77,6 +78,7 @@ export default async function RootLayout({ children, params }) {
         >
           {children}
         </Layout>
+        <AiAssistant />
       </body>
     </html>
   );
