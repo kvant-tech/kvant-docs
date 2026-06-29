@@ -26,7 +26,7 @@ function renderMarkdown(text: string) {
     .replace(
       /\[([^\]]+)\]\(([^)]+)\)/g,
       (_, label, url) =>
-        `<a href="${sanitizeUrl(url)}" class="ai-link">${label}</a>`,
+        `<a href="${sanitizeUrl(url)}" class="ai-link" target="_blank" rel="noopener noreferrer">${label}</a>`,
     )
     .replace(/^\s*[-•]\s+(.+)$/gm, '<li>$1</li>')
     .replace(/(<li>.*<\/li>\n?)+/g, (m) => `<ul>${m}</ul>`)
