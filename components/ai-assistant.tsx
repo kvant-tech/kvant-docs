@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback, FormEvent } from 'react';
-import { MessageCircle, X, Send, Sparkles, Loader2 } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback, FormEvent, useMemo } from 'react';
+import { MessageCircle, X, Send, Sparkles } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -33,6 +33,55 @@ function renderMarkdown(text: string) {
     .replace(/\n{2,}/g, '</p><p>')
     .replace(/\n/g, '<br/>');
   return `<p>${html}</p>`;
+}
+
+const THINKING_PHRASES = [
+  'Думаю',
+  'Ищу информацию',
+  'Анализирую',
+  'Собираю данные',
+  'Проверяю',
+  'Подбираю ответ',
+];
+
+function ThinkingIndicator() {
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [dots, setDots] = useState(1);
+  const [fade, setFade] = useState(true);
+
+  useEffect(() => {
+    const dotsInterval = setInterval(() => {
+      setDots((d) => (d % 3) + 1);
+    }, 500);
+    return () => clearInterval(dotsInterval);
+  }, []);
+
+  useEffect(() => {
+    const phraseInterval = setInterval(() => {
+      setFade(false);
+      setTimeout(() => {
+        setPhraseIdx((i) => (i + 1) % THINKING_PHRASES.length);
+        setFade(true);
+      }, 200);
+    }, 2500);
+    return () => clearInterval(phraseInterval);
+  }, []);
+
+  return (
+    <div className="flex justify-start">
+      <div className="bg-neutral-100 dark:bg-neutral-800 rounded-2xl rounded-bl-md px-4 py-2.5">
+        <span
+          className="text-sm text-neutral-500 dark:text-neutral-400 inline-block transition-opacity duration-200"
+          style={{ opacity: fade ? 1 : 0 }}
+        >
+          {THINKING_PHRASES[phraseIdx]}
+          <span className="inline-block w-5 text-left">
+            {'.'.repeat(dots)}
+          </span>
+        </span>
+      </div>
+    </div>
+  );
 }
 
 export function AiAssistant() {
@@ -228,11 +277,7 @@ export function AiAssistant() {
           ))}
 
           {loading && messages[messages.length - 1]?.role !== 'assistant' && (
-            <div className="flex justify-start">
-              <div className="bg-neutral-100 dark:bg-neutral-800 rounded-2xl rounded-bl-md px-4 py-3">
-                <Loader2 size={16} className="animate-spin text-indigo-500" />
-              </div>
-            </div>
+            <ThinkingIndicator />
           )}
         </div>
 
