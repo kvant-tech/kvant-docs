@@ -120,7 +120,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const relevant = await findRelevant(message);
+    // Build search query from recent context + current message
+    let searchQuery = message;
+    if (Array.isArray(history) && history.length > 0) {
+      const recent = history
+        .slice(-4)
+        .filter((m: { role: string; content: string }) => m.role === 'user' || m.role === 'assistant')
+        .map((m: { content: string }) => m.content)
+        .join('\n');
+      searchQuery = recent + '\n' + message;
+    }
+
+    const relevant = await findRelevant(searchQuery);
     const context = buildContext(relevant);
 
     const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
