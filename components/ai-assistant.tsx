@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback, FormEvent, useMemo } from 'react';
+import { useState, useRef, useEffect, useCallback, FormEvent } from 'react';
 import { MessageCircle, X, Send, Sparkles } from 'lucide-react';
 
 interface Message {
