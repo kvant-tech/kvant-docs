@@ -136,6 +136,7 @@ export function AiAssistant() {
         throw new Error(err.error || `Ошибка ${res.status}`);
       }
 
+      const topScore = parseFloat(res.headers.get('X-Top-Score') || '1');
       const reader = res.body?.getReader();
       const decoder = new TextDecoder();
       let assistantContent = '';
@@ -151,6 +152,17 @@ export function AiAssistant() {
           ...prev.slice(0, -1),
           { role: 'assistant', content: snapshot },
         ]);
+      }
+
+      // Log unanswered questions (low relevance or explicit "not found" phrases)
+      const notFoundPhrases = ['не нашел', 'нет информации', 'не содержит', 'не удалось найти', 'к сожалению'];
+      const looksUnanswered = topScore < 0.35 || notFoundPhrases.some((p) => assistantContent.toLowerCase().includes(p));
+      if (looksUnanswered) {
+        fetch('/api/unanswered', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: text, topScore }),
+        }).catch(() => {});
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Неизвестная ошибка';

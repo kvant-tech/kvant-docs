@@ -42,10 +42,15 @@ function dotProduct(a: number[], b: number[]): number {
   return sum;
 }
 
+interface SearchResult {
+  chunks: Chunk[];
+  topScore: number;
+}
+
 async function findRelevant(
   query: string,
   topK = 5,
-): Promise<Chunk[]> {
+): Promise<SearchResult> {
   const index = loadIndex();
   const res = await getOpenAI().embeddings.create({
     model: 'text-embedding-3-small',
@@ -58,7 +63,10 @@ async function findRelevant(
     score: dotProduct(qEmb, chunk.embedding),
   }));
   scored.sort((a, b) => b.score - a.score);
-  return scored.slice(0, topK).map((s) => s.chunk);
+  return {
+    chunks: scored.slice(0, topK).map((s) => s.chunk),
+    topScore: scored.length > 0 ? scored[0].score : 0,
+  };
 }
 
 // --- prompt ---
@@ -131,7 +139,7 @@ export async function POST(req: NextRequest) {
       searchQuery = recent + '\n' + message;
     }
 
-    const relevant = await findRelevant(searchQuery);
+    const { chunks: relevant, topScore } = await findRelevant(searchQuery);
     const context = buildContext(relevant);
 
     const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
@@ -185,6 +193,7 @@ export async function POST(req: NextRequest) {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
         'Cache-Control': 'no-cache',
+        'X-Top-Score': topScore.toFixed(4),
       },
     });
   } catch (err: unknown) {
