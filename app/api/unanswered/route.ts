@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import path from 'path';
 
-const FILE_PATH = path.join(process.cwd(), 'data', 'unanswered-questions.json');
+export const dynamic = 'force-dynamic';
+
+const UNANSWERED_DIR = path.join(process.cwd(), 'data', 'unanswered');
+const FILE_PATH = path.join(UNANSWERED_DIR, 'questions.json');
 
 interface UnansweredEntry {
   question: string;
@@ -19,6 +22,9 @@ function loadEntries(): UnansweredEntry[] {
 }
 
 function saveEntries(entries: UnansweredEntry[]) {
+  if (!existsSync(UNANSWERED_DIR)) {
+    mkdirSync(UNANSWERED_DIR, { recursive: true });
+  }
   writeFileSync(FILE_PATH, JSON.stringify(entries, null, 2), 'utf-8');
 }
 

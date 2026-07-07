@@ -1,5 +1,6 @@
-# AI assistant embeddings index
+# AI assistant data (generated at runtime)
 data/embeddings.json
+data/unanswered-questions.json
 
 # pnpm store
 .pnpm-store/
