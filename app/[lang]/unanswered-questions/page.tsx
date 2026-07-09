@@ -13,7 +13,7 @@ export default function UnansweredQuestionsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/unanswered')
+    fetch('/api/unanswered', { cache: 'no-store' })
       .then((r) => r.json())
       .then((data) => setEntries(data.reverse()))
       .catch(() => {})

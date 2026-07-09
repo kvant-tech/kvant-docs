@@ -29,7 +29,9 @@ function saveEntries(entries: UnansweredEntry[]) {
 }
 
 export async function GET() {
-  return NextResponse.json(loadEntries());
+  return NextResponse.json(loadEntries(), {
+    headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate', 'Pragma': 'no-cache' },
+  });
 }
 
 export async function POST(req: NextRequest) {
