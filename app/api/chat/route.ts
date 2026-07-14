@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, renameSync } from 'fs';
 import path from 'path';
 
 let _openai: OpenAI | null = null;
@@ -75,7 +75,7 @@ const SYSTEM_PROMPT = `Ты — ИИ-ассистент документации
 
 Правила:
 - Отвечай только на основе предоставленного контекста из документации
-- Если в контексте нет ответа — честно скажи об этом
+- Если в контексте нет полного ответа — честно скажи об этом. Параллельно вызови функцию log_unanswered (пользователь её не видит, это внутренний механизм)
 - Давай ссылки на релевантные страницы в формате markdown с относительными путями: [Название страницы](/ru/reference/...). Используй ТОЛЬКО пути из контекста, НИКОГДА не добавляй домен или https://
 - Отвечай на русском языке
 - Будь кратким и конкретным
@@ -88,6 +88,62 @@ function buildContext(chunks: Chunk[]): string {
         `--- Документ ${i + 1}: "${c.title}" (${c.url}) ---\n${c.content}`,
     )
     .join('\n\n');
+}
+
+// --- function calling tool ---
+
+const LOG_UNANSWERED_TOOL: OpenAI.Chat.ChatCompletionTool = {
+  type: 'function',
+  function: {
+    name: 'log_unanswered',
+    description: 'Вызови эту функцию, когда в предоставленном контексте документации нет ответа на вопрос пользователя — полностью или частично.',
+    parameters: {
+      type: 'object',
+      properties: {
+        question: {
+          type: 'string',
+          description: 'Краткая формулировка вопроса пользователя',
+        },
+        reason: {
+          type: 'string',
+          description: 'Почему не удалось ответить (нет в документации, неполная информация и т.д.)',
+        },
+      },
+      required: ['question'],
+    },
+  },
+};
+
+// --- unanswered questions logging ---
+
+const UNANSWERED_DIR = path.join(process.cwd(), 'data', 'unanswered');
+
+function saveUnansweredQuestion(question: string, topScore: number, reason?: string) {
+  try {
+    if (!existsSync(UNANSWERED_DIR)) {
+      mkdirSync(UNANSWERED_DIR, { recursive: true });
+    }
+    const date = new Date().toISOString().slice(0, 10);
+    const filePath = path.join(UNANSWERED_DIR, `${date}.json`);
+
+    let entries: { question: string; timestamp: string; topScore: number; reason?: string }[] = [];
+    try { entries = JSON.parse(readFileSync(filePath, 'utf-8')); } catch {}
+
+    // Deduplicate within same day
+    const trimmed = question.trim().toLowerCase();
+    if (entries.some((e) => e.question.toLowerCase() === trimmed)) return;
+
+    entries.push({
+      question: question.trim().slice(0, 500),
+      timestamp: new Date().toISOString(),
+      topScore: Math.round(topScore * 1000) / 1000,
+      ...(reason ? { reason: reason.slice(0, 200) } : {}),
+    });
+
+    const tmpPath = filePath + '.tmp';
+    writeFileSync(tmpPath, JSON.stringify(entries, null, 2), 'utf-8');
+    renameSync(tmpPath, filePath);
+  } catch {}
 }
 
 // --- rate limit (in-memory, per IP) ---
@@ -161,35 +217,32 @@ export async function POST(req: NextRequest) {
 
     messages.push({ role: 'user', content: message });
 
-    const stream = await getOpenAI().chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: process.env.OPENAI_CHAT_MODEL || 'gpt-4o-mini',
       messages,
-      stream: true,
+      tools: [LOG_UNANSWERED_TOOL],
+      parallel_tool_calls: true,
       temperature: 0.3,
       max_tokens: 1024,
     });
 
-    const encoder = new TextEncoder();
-    const readable = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of stream) {
-            const text = chunk.choices[0]?.delta?.content;
-            if (text) {
-              controller.enqueue(encoder.encode(text));
-            }
-          }
-        } catch {
-          controller.enqueue(
-            encoder.encode('\n\n[Ошибка генерации ответа]'),
-          );
-        } finally {
-          controller.close();
-        }
-      },
-    });
+    const choice = response.choices[0];
 
-    return new Response(readable, {
+    // Handle tool calls silently — user never sees this
+    if (choice.message.tool_calls?.length) {
+      for (const tc of choice.message.tool_calls) {
+        if (tc.function.name === 'log_unanswered') {
+          try {
+            const args = JSON.parse(tc.function.arguments);
+            saveUnansweredQuestion(args.question || message, topScore, args.reason);
+          } catch {}
+        }
+      }
+    }
+
+    // Return text content to user (model sends content + tool_call in parallel)
+    const text = choice.message.content || '';
+    return new Response(text, {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
         'Cache-Control': 'no-cache',
