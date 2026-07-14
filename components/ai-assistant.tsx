@@ -136,7 +136,6 @@ export function AiAssistant() {
         throw new Error(err.error || `Ошибка ${res.status}`);
       }
 
-      const topScore = parseFloat(res.headers.get('X-Top-Score') || '1');
       const reader = res.body?.getReader();
       const decoder = new TextDecoder();
       let assistantContent = '';
